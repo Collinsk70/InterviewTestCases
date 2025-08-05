@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAN Chat</title>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+    #chat { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+    #messages { list-style: none; padding: 0; max-height: 300px; overflow-y: auto; }
+    #messages li { padding: 5px; margin-bottom: 5px; background: #eee; border-radius: 5px; }
+    input { width: 80%; padding: 10px; }
+    button { width: 18%; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <h2>LAN Chat</h2>
+    <ul id="messages"></ul>
+    <input id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    // Change to your laptop's IP
+    const SERVER_IP = "My ip"; 
+    const socket = io(`http://${SERVER_IP}:5000`);
+
+    socket.on('connect', () => {
+      console.log('Connected to chat server');
+    });
+
+    socket.on('message', msg => {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      document.getElementById('messages').appendChild(li);
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('message');
+      const message = input.value;
+      if (message.trim() !== "") {
+        socket.send(message);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
