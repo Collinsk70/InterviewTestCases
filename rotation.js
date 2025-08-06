@@ -1,10 +1,7 @@
-// you can write to stdout for debugging purposes, e.g.
-// console.log('this is a debug message');
+function solution (X,Y,D){
+    const distance = Y - X;
 
-function solution(A) {
-let unpaired = 0;
-    for (let i = 0; i < A.length; i++) {
-        unpaired ^= A[i]; // XOR each element
-    }
-    return unpaired;
-    }
+    jump = Math.ceil(distance/D)
+
+    return jump
+}
