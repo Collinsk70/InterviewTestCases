@@ -1,4 +1,4 @@
-const SERVER_IP = ""; // Replace with your IP
+const SERVER_IP = ""; // Replace with your IP Address
 const socket = io(`http://${SERVER_IP}:5000`);
 const SECRET_KEY = "mysecretkey123";
 
