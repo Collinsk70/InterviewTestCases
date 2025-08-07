@@ -34,5 +34,18 @@ def handle_disconnect():
     print(f"User disconnected: {username}")
     emit("user_list", list(users.values()), broadcast=True)
 
+@socketio.on('video-offer')
+def handle_video_offer(data):
+    emit('video-offer', data, broadcast=True, include_self=False)
+
+@socketio.on('video-answer')
+def handle_video_answer(data):
+    emit('video-answer', data, broadcast=True, include_self=False)
+
+@socketio.on('ice-candidate')
+def handle_ice_candidate(data):
+    emit('ice-candidate', data, broadcast=True, include_self=False)
+
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

@@ -31,6 +31,13 @@
         <button id="send" onclick="sendMessage()">Send</button>
       </div>
     </div>
+          <!-- Add in #chat-container -->
+      <div id="video-area">
+        <video id="localVideo" autoplay muted playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <button id="callBtn" onclick="startCall()">Start Video Call</button>
+      </div>
+
   </div>
 
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>

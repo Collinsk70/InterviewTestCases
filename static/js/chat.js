@@ -61,3 +61,72 @@ function sendMessage() {
     input.value = "";
   }
 }
+let localStream;
+let peerConnection;
+const peerConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+const localVideo = document.getElementById("localVideo");
+const remoteVideo = document.getElementById("remoteVideo");
+
+function startCall() {
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+    localStream = stream;
+    localVideo.srcObject = stream;
+
+    peerConnection = new RTCPeerConnection(peerConfig);
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+    peerConnection.onicecandidate = event => {
+      if (event.candidate) {
+        socket.emit('ice-candidate', { to: 'all', candidate: event.candidate });
+      }
+    };
+
+    peerConnection.ontrack = event => {
+      remoteVideo.srcObject = event.streams[0];
+    };
+
+    peerConnection.createOffer().then(offer => {
+      peerConnection.setLocalDescription(offer);
+      socket.emit('video-offer', { sdp: offer });
+    });
+  });
+}
+
+socket.on('video-offer', (data) => {
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+    localStream = stream;
+    localVideo.srcObject = stream;
+
+    peerConnection = new RTCPeerConnection(peerConfig);
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+    peerConnection.onicecandidate = event => {
+      if (event.candidate) {
+        socket.emit('ice-candidate', { candidate: event.candidate });
+      }
+    };
+
+    peerConnection.ontrack = event => {
+      remoteVideo.srcObject = event.streams[0];
+    };
+
+    peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+      return peerConnection.createAnswer();
+    }).then(answer => {
+      return peerConnection.setLocalDescription(answer);
+    }).then(() => {
+      socket.emit('video-answer', { sdp: peerConnection.localDescription });
+    });
+  });
+});
+
+socket.on('video-answer', (data) => {
+  peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+});
+
+socket.on('ice-candidate', (data) => {
+  if (data.candidate) {
+    peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+  }
+});
