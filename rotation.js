@@ -1,10 +1,22 @@
-// you can write to stdout for debugging purposes, e.g.
-// console.log('this is a debug message');
-
 function solution(A) {
-    // Implement your solution here
-    const N = A.length;
-    const expectedSum = (N + 1) * (N + 2) / 2;
-    const actualSum = A.reduce((acc, num) => acc + num, 0);
-    return expectedSum - actualSum;
+    let totalSum = 0;
+    for (let num of A) {
+        totalSum += num;
+    }
+    
+    let minDiff = Infinity;
+    let leftSum = 0;
+    
+    // Loop until the second last element
+    for (let i = 0; i < A.length - 1; i++) {
+        leftSum += A[i];
+        let rightSum = totalSum - leftSum;
+        let diff = Math.abs(leftSum - rightSum);
+        
+        if (diff < minDiff) {
+            minDiff = diff;
+        }
+    }
+    
+    return minDiff;
 }
