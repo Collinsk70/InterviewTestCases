@@ -476,7 +476,7 @@ def enrich_matches_best_effort(df: pd.DataFrame,
     return df
 
 
-# ---------------- Understat helpers (kept as earlier; fallback to page-scrape) ----------------
+# ---------------- Understat helpers (kep-scrape) ----------------
 def _extract_json_from_text_variants(text: str) -> Optional[Any]:
     patterns = [
         r"var matchesData = JSON\.parse\('(?P<data>.+?)'\)",
