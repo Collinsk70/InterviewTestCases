@@ -7,7 +7,7 @@ function solution(A) {
     let minDiff = Infinity;
     let leftSum = 0;
     
-    // Loop until the second last element is reached
+    // Loop until the second last element is reached get that
     for (let i = 0; i < A.length - 1; i++) {
         leftSum += A[i];
         let rightSum = totalSum - leftSum;
